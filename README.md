@@ -33,3 +33,20 @@ RegExp, or an array of them.
 ### prefix
 Path prefix for generated markdown files. Files will be put at
 \<asset path>/\<prefix>/\<module's relative path>
+
+### intro/outro
+String to be prepended before or appended after generated markdown strings. Can
+be a string or a function. Function will be called with an argument object including
+id of the module.
+
+```js
+export default {
+  ...generalConfigs,
+  plugins: [
+    vuedoc({ intro: ({ id }) => `id` }),
+    ...otherPlugins,
+  ],
+};
+
+// Generates markdown files starting with module's ID string.
+```
