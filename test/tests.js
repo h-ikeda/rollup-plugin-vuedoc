@@ -158,4 +158,100 @@ module.exports = (rollup) => () => {
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'index.md' }));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'test-component-b.md' }));
   });
+  test('rollup should output markdowns that starts with intro option string', async () => {
+    const bundle = await rollup({
+      input: resolve(__dirname, 'fixtures/basic/index.js'),
+      plugins: [vuedoc({ intro: 'Prepended by intro option' })],
+    });
+    const { output } = await bundle.generate({ format: 'esm' });
+    expect(output).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        fileName: 'test-component-a.md',
+        isAsset: true,
+        source: `Prepended by intro option\n${a}`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-component-b.md',
+        isAsset: true,
+        source: `Prepended by intro option\n${b}`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-directory/test-component-c.md',
+        isAsset: true,
+        source: `Prepended by intro option\n${c}`,
+      }),
+    ]));
+  });
+  test('rollup should output markdowns that starts with intro option function', async () => {
+    const bundle = await rollup({
+      input: resolve(__dirname, 'fixtures/basic/index.js'),
+      plugins: [vuedoc({ intro: ({ id }) => `${id}` })],
+    });
+    const { output } = await bundle.generate({ format: 'esm' });
+    expect(output).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        fileName: 'test-component-a.md',
+        isAsset: true,
+        source: `${resolve(__dirname, 'fixtures/basic/test-component-a.js')}\n${a}`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-component-b.md',
+        isAsset: true,
+        source: `${resolve(__dirname, 'fixtures/basic/test-component-b.js')}\n${b}`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-directory/test-component-c.md',
+        isAsset: true,
+        source: `${resolve(__dirname, 'fixtures/basic/test-directory/test-component-c.js')}\n${c}`,
+      }),
+    ]));
+  });
+  test('rollup should output markdowns that starts with outro option string', async () => {
+    const bundle = await rollup({
+      input: resolve(__dirname, 'fixtures/basic/index.js'),
+      plugins: [vuedoc({ outro: 'Appended by outro option' })],
+    });
+    const { output } = await bundle.generate({ format: 'esm' });
+    expect(output).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        fileName: 'test-component-a.md',
+        isAsset: true,
+        source: `${a}\nAppended by outro option`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-component-b.md',
+        isAsset: true,
+        source: `${b}\nAppended by outro option`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-directory/test-component-c.md',
+        isAsset: true,
+        source: `${c}\nAppended by outro option`,
+      }),
+    ]));
+  });
+  test('rollup should output markdowns that starts with intro option function', async () => {
+    const bundle = await rollup({
+      input: resolve(__dirname, 'fixtures/basic/index.js'),
+      plugins: [vuedoc({ outro: ({ id }) => `${id}` })],
+    });
+    const { output } = await bundle.generate({ format: 'esm' });
+    expect(output).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        fileName: 'test-component-a.md',
+        isAsset: true,
+        source: `${a}\n${resolve(__dirname, 'fixtures/basic/test-component-a.js')}`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-component-b.md',
+        isAsset: true,
+        source: `${b}\n${resolve(__dirname, 'fixtures/basic/test-component-b.js')}`,
+      }),
+      expect.objectContaining({
+        fileName: 'test-directory/test-component-c.md',
+        isAsset: true,
+        source: `${c}\n${resolve(__dirname, 'fixtures/basic/test-directory/test-component-c.js')}`,
+      }),
+    ]));
+  });
 };

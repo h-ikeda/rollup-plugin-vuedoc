@@ -10,7 +10,12 @@ function match(target, test) {
   }); 
 }
 
-module.exports = function vuedoc({ test, prefix = '' } = {}) {
+module.exports = function vuedoc({ test, prefix = '', intro = '', outro = '' } = {}) {
+
+  if (!/function|string/.test(typeof intro) | !/function|string/.test(typeof outro)) {
+    throw new TypeError('intro/outro option must be a function or a string.');
+  }
+
   return {
     name: 'vuedoc',
     async buildStart({ input }) {
@@ -24,8 +29,13 @@ module.exports = function vuedoc({ test, prefix = '' } = {}) {
           this.error(e);
         }
       }
-      const source = await md({ filename: id });
-      if (!source.length) return null;
+      const doc = await md({ filename: id });
+      if (!doc.length) return null;
+      const introString = typeof intro === 'function' ? intro({ id }) : intro;
+      const outroString = typeof outro === 'function' ? outro({ id }) : outro;
+      const introLf = introString.length ? '\n' : '';
+      const outroLf = outroString.length ? '\n' : '';
+      const source = `${introString}${introLf}${doc}${outroLf}${outroString}`;
       const { dir, name } = parse(join(prefix, relative(this.vuedocInput, id)));
       const fileName = format({ dir, name, ext: '.md' });
       this.emitFile({ type: 'asset', source, fileName });
