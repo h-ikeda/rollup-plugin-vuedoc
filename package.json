@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-vuedoc",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Rollup plugin to generate markdown documentation from Vue.js component source with @vuedoc/md.",
   "main": "src/index.js",
   "directories": {
