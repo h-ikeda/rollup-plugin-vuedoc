@@ -39,8 +39,5 @@
   },
   "peerDependencies": {
     "rollup": "^1.19.2"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   }
 }
