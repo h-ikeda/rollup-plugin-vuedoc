@@ -50,3 +50,8 @@ export default {
 
 // Generates markdown files starting with module's ID string.
 ```
+
+### index
+If true, generate indix markdowns containing a directory name string as the title
+at each directory under the prefix path. If function is given, returning string
+will be the content of the index. Functions are called with a directory path.
