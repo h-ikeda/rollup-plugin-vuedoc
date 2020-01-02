@@ -1,6 +1,9 @@
 # rollup-plugin-vuedoc
 Rollup plugin to generate markdown documentation from Vue.js component source with @vuedoc/md.
 
+[![NPM](https://nodei.co/npm/rollup-plugin-vuedoc.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/rollup-plugin-vuedoc/)  
+![Node CI](https://github.com/h-ikeda/rollup-plugin-vuedoc/workflows/Node%20CI/badge.svg "Test status")
+
 ## Usage
 1. Install the plugin.
    ```sh
