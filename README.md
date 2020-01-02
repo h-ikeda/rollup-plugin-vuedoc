@@ -58,3 +58,20 @@ export default {
 If true, generate indix markdowns containing a directory name string as the title
 at each directory under the prefix path. If function is given, returning string
 will be the content of the index. Functions are called with a directory path.
+
+### replace
+Replaces substrings of generated markdown strings. `test` property and `replacement`
+property of the `replace` object will be passed to `String.prototype.replace()`
+function.
+
+```js
+export default {
+  ...generalConfigs,
+  plugins: [
+    vuedoc({ replace: { test: /to be replaced/g, replacement: 'replaced' }),
+    ...otherPlugins,
+  ],
+};
+
+// String.prototype.replace(/to be replaced/g, 'replaced') will be applied.
+```

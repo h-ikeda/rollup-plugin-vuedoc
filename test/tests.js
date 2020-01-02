@@ -376,4 +376,28 @@ module.exports = (rollup) => () => {
       fileName: 'index.md',
     }));
   });
+  test('rollup should output markdown documents with replacements', async () => {
+    const bundle = await rollup({
+      input: resolve(__dirname, 'fixtures/basic/index.js'),
+      plugins: [vuedoc({ replace: { test: /explaination/g, replacement: 'replaced' } })],
+    });
+    const { output } = await bundle.generate({ format: 'esm' });
+    expect(output).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        fileName: 'test-component-a.md',
+        isAsset: true,
+        source: a.replace(/explaination/g, 'replaced'),
+      }),
+      expect.objectContaining({
+        fileName: 'test-component-b.md',
+        isAsset: true,
+        source: b.replace(/explaination/g, 'replaced'),
+      }),
+      expect.objectContaining({
+        fileName: 'test-directory/test-component-c.md',
+        isAsset: true,
+        source: c.replace(/explaination/g, 'replaced'),
+      }),
+    ]));
+  });
 };
