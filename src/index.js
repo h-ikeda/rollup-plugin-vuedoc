@@ -10,7 +10,12 @@ function match(target, test) {
   }); 
 }
 
-module.exports = function vuedoc({ test, prefix = '', intro = '', outro = '', index } = {}) {
+function replacer(content, { test, replacement }) {
+  return content.replace(test, replacement);
+}
+
+module.exports = function vuedoc(options = {}) {
+  const { test, prefix = '', intro = '', outro = '', index, replace } = options;
 
   if (!/function|string/.test(typeof intro) || !/function|string/.test(typeof outro)) {
     throw new TypeError('intro/outro option must be a function or a string.');
@@ -32,8 +37,9 @@ module.exports = function vuedoc({ test, prefix = '', intro = '', outro = '', in
         }
       }
       // Generate and emit markdown
-      const doc = await md({ filename: id });
-      if (!doc.length) return null;
+      const raw = await md({ filename: id });
+      if (!raw.length) return null;
+      const doc = replace ? replacer(raw, replace) : raw;
       const introString = typeof intro === 'function' ? intro({ id }) : intro;
       const outroString = typeof outro === 'function' ? outro({ id }) : outro;
       const introLf = introString.length ? '\n' : '';
