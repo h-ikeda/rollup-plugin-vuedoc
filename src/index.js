@@ -24,7 +24,18 @@ module.exports = function vuedoc(options = {}) {
   return {
     name: 'vuedoc',
     async buildStart({ input }) {
-      this.vuedocInput = dirname(resolve(input));
+      if (Array.isArray(input) && input.length > 1) {
+        const chars = [];
+        for (let i = input[0].length - 1; i >= 0; --i) {
+          chars.unshift(input.map((pinput) => pinput.slice(i, i + 1)));
+        } 
+        this.vuedocInput = resolve(chars
+          .filter((pchars) => pchars.every((pchar) => (pchar === pchars[0])))
+          .map(([pchar]) => pchar)
+          .join(''));
+      } else {
+        this.vuedocInput = dirname(resolve(Array.isArray(input) && input[0] || input));
+      }
       this.vuedocIndices = [];
     },
     async transform(code, id) {

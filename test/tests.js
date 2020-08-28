@@ -2,7 +2,7 @@ const { resolve, basename } = require('path');
 const { md } = require('@vuedoc/md');
 const vuedoc = require('../src/index');
 
-module.exports = (rollup) => () => {
+module.exports = (rollup, { assetObject }) => () => {
   let a, b, c;
   beforeAll(async () => {
     a = await md({
@@ -24,19 +24,21 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: a,
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: b,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should not output empty markdowns', async () => {
@@ -56,19 +58,21 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'tmp/test-component-a.md',
-        isAsset: true,
         source: a,
       }),
       expect.objectContaining({
         fileName: 'tmp/test-component-b.md',
-        isAsset: true,
         source: b,
       }),
       expect.objectContaining({
         fileName: 'tmp/test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should output markdowns only if those id passes regexp test', async () => {
@@ -80,14 +84,16 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: b,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
     ]));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'index.md' }));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'test-component-a.md' }));
@@ -101,14 +107,16 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: b,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
     ]));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'index.md' }));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'test-component-a.md' }));
@@ -122,9 +130,11 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: a,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
     ]));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'index.md' }));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'test-component-b.md' }));
@@ -146,14 +156,16 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: a,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
     ]));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'index.md' }));
     expect(output).not.toContainEqual(expect.objectContaining({ fileName: 'test-component-b.md' }));
@@ -167,19 +179,21 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: `Prepended by intro option\n${a}`,
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: `Prepended by intro option\n${b}`,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: `Prepended by intro option\n${c}`,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should output markdowns that starts with intro option function', async () => {
@@ -191,19 +205,21 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: `${resolve(__dirname, 'fixtures/basic/test-component-a.js')}\n${a}`,
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: `${resolve(__dirname, 'fixtures/basic/test-component-b.js')}\n${b}`,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: `${resolve(__dirname, 'fixtures/basic/test-directory/test-component-c.js')}\n${c}`,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should output markdowns that starts with outro option string', async () => {
@@ -215,19 +231,21 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: `${a}\nAppended by outro option`,
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: `${b}\nAppended by outro option`,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: `${c}\nAppended by outro option`,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should output markdowns that starts with outro option function', async () => {
@@ -239,19 +257,21 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: `${a}\n${resolve(__dirname, 'fixtures/basic/test-component-a.js')}`,
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: `${b}\n${resolve(__dirname, 'fixtures/basic/test-component-b.js')}`,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: `${c}\n${resolve(__dirname, 'fixtures/basic/test-directory/test-component-c.js')}`,
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should generate index markdowns', async () => {
@@ -263,29 +283,31 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: a,
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: b,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
       expect.objectContaining({
         fileName: 'test-directory/index.md',
-        isAsset: true,
         source: '# test-directory',
       }),
       expect.objectContaining({
         fileName: 'index.md',
-        isAsset: true,
         source: '# basic',
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should dynamically generate index markdowns', async () => {
@@ -297,29 +319,31 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: a,
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: b,
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
       expect.objectContaining({
         fileName: 'test-directory/index.md',
-        isAsset: true,
         source: 'title: test-directory',
       }),
       expect.objectContaining({
         fileName: 'index.md',
-        isAsset: true,
         source: 'title: ',
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should generate index markdowns with prefix', async () => {
@@ -331,29 +355,31 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'pre-dir/test-component-a.md',
-        isAsset: true,
         source: a,
       }),
       expect.objectContaining({
         fileName: 'pre-dir/test-component-b.md',
-        isAsset: true,
         source: b,
       }),
       expect.objectContaining({
         fileName: 'pre-dir/test-directory/test-component-c.md',
-        isAsset: true,
         source: c,
       }),
       expect.objectContaining({
         fileName: 'pre-dir/test-directory/index.md',
-        isAsset: true,
         source: '# test-directory',
       }),
       expect.objectContaining({
         fileName: 'pre-dir/index.md',
-        isAsset: true,
         source: '# pre-dir',
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
   test('rollup should not generate index markdowns upside prefix path', async () => {
@@ -385,19 +411,21 @@ module.exports = (rollup) => () => {
     expect(output).toEqual(expect.arrayContaining([
       expect.objectContaining({
         fileName: 'test-component-a.md',
-        isAsset: true,
         source: a.replace(/explaination/g, 'replaced'),
       }),
       expect.objectContaining({
         fileName: 'test-component-b.md',
-        isAsset: true,
         source: b.replace(/explaination/g, 'replaced'),
       }),
       expect.objectContaining({
         fileName: 'test-directory/test-component-c.md',
-        isAsset: true,
         source: c.replace(/explaination/g, 'replaced'),
       }),
+    ]));
+    expect(output).toEqual(expect.arrayContaining([
+      assetObject(),
+      assetObject(),
+      assetObject(),
     ]));
   });
 };
